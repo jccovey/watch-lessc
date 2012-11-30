@@ -4,6 +4,7 @@ var fs = require('fs');
 var util = require('util');
 var path = require('path');
 var less = require('less');
+var watch = require('watch');
 
 var argv = require('optimist')
     .usage('Usage: {OPTIONS}')
@@ -11,7 +12,11 @@ var argv = require('optimist')
     .option('input', {
       alias: 'i',
       demand: 'i',
-      desc: 'Specify input file to watch.'
+      desc: 'Specify input file to watch/compile.'
+    })
+    .option('directory', {
+      alias: 'd',
+      desc: 'Specify input directory to watch.'
     })
     .option('output', {
         alias: 'o',
@@ -62,8 +67,26 @@ var lessc = function(input, output){
 
 var input_file = path.resolve(process.cwd(), argv.input);
 var output_file = path.resolve(process.cwd(), argv.output);
+var watch_directory = argv.directory ? path.resolve(process.cwd(), argv.directory): '';
 
-fs.watchFile(input_file, function(current, previous) {
+/**
+ * Compiles the less files given by the input and ouput options
+ */
+function compileInput(){
     console.log("watch-lessc: Updated: " + output_file);
     fs.readFile(input_file, 'utf-8', lessc(input_file, output_file));
-});
+}
+
+/*
+ * Check to see if we are watching a directory or just
+ * a single file
+ */
+if (watch_directory){
+    watch.watchTree(watch_directory, function(f, curr, prev){
+        compileInput();
+    });
+} else {
+    fs.watchFile(input_file, function(current, previous) {
+        compileInput();
+    });
+}
