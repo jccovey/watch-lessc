@@ -73,7 +73,7 @@ var watch_directory = argv.directory ? path.resolve(process.cwd(), argv.director
  * Compiles the less files given by the input and ouput options
  */
 function compileInput(){
-    console.log("watch-lessc: Updated: " + output_file);
+    console.log((new Date()).toTimeString() + " watch-lessc: Updated: " + output_file);
     fs.readFile(input_file, 'utf-8', lessc(input_file, output_file));
 }
 
