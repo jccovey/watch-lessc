@@ -68,7 +68,7 @@ var lessc = function(input, output){
 var input_file = path.resolve(process.cwd(), argv.input);
 var output_file = path.resolve(process.cwd(), argv.output);
 var watch_directory = argv.directory ? path.resolve(process.cwd(), argv.directory): '';
-
+console.log(input_file,output_file,watch_directory)
 /**
  * Compiles the less files given by the input and ouput options
  */
