@@ -8,11 +8,26 @@ var watch = require('watch');
 
 var argv = require('optimist')
     .usage('Usage: {OPTIONS}')
+	.boolean(['compress'])
     .wrap(80)
     .option('input', {
       alias: 'i',
       demand: 'i',
       desc: 'Specify input file to watch/compile.'
+    })
+    .option('paths', {
+      alias: 'p',
+      desc: 'Specify search paths for @import directives.',
+	  default: []
+    })
+    .option('compress', {
+      alias: 'c',
+      desc: 'Minify CSS output.'
+    })
+    .option('filename', {
+      alias: 'f',
+      desc: 'Specify a filename, for better error messages.',
+	  default: "'style.less'"
     })
     .option('directory', {
       alias: 'd',
@@ -31,50 +46,58 @@ var argv = require('optimist')
       if (argv.help) {
         throw '';
       }
-    }).argv;
+}).argv;
 
-var lessc = function(input, output){
-    return function (e, data) {
-        if (e) {
-            console.log("lessc: " + e.message);
-        }
+var lessc = function(lessInput, lessOutput){
+	less.render(lessInput,{
+      paths: argv.paths instanceof Array ? argv.paths : [argv.paths],  // Specify search paths for @import directives
+      filename: argv.filename, // Specify a filename, for better error messages
+      compress: argv.compress          // Minify CSS output
+    },
+	function(error, output) {
+		if (!error) {
+			var fd = fs.openSync(lessOutput, "w");
+			fs.writeSync(fd, output.css, 0, "utf-8");
+			console.info((new Date()).toTimeString() + " watch-lessc: Write to file: " + output_file);
+		} else {
+			console.error((new Date()).toTimeString() + " watch-lessc: Write error: " + error);
+		}
+	});
+}					
+less.logger.addListener({
+    debug: function(msg) {
+		console.debug(msg);
+    },
+    info: function(msg) {
+		console.info(msg);
+    },
+    warn: function(msg) {
+		console.warn(msg);
+    },
+    error: function(msg) {
+		console.error(msg);
+    }
+});
 
-        var parser = new(less.Parser)({
-            paths: [path.dirname(input)],
-            optimization: 0,
-            filename: input
-        });
-
-        parser.parse(data, function (err, tree) {
-            if (err) {
-                less.writeError(err, options);
-            } else {
-                try {
-                    var css = tree.toCSS({ compress: false });
-                    if (output) {
-                        var fd = fs.openSync(output, "w");
-                        fs.writeSync(fd, css, 0, "utf8");
-                    } else {
-                        util.print(css);
-                    }
-                } catch (e) {
-                    less.writeError(e, options);
-                }
-            }
-        });
-    };
-};
 
 var input_file = path.resolve(process.cwd(), argv.input);
 var output_file = path.resolve(process.cwd(), argv.output);
 var watch_directory = argv.directory ? path.resolve(process.cwd(), argv.directory): '';
-console.log(input_file,output_file,watch_directory)
+
+console.log((new Date()).toTimeString() + " watch-lessc: InputFile: "+input_file);
+console.log((new Date()).toTimeString() + " watch-lessc: OutputFile: "+ output_file);
 /**
  * Compiles the less files given by the input and ouput options
  */
-function compileInput(){
+var compileInput = function (){
     console.log((new Date()).toTimeString() + " watch-lessc: Updated: " + output_file);
-    fs.readFile(input_file, 'utf-8', lessc(input_file, output_file));
+    fs.readFile(input_file, 'utf-8',function(err,data){
+		if(err){  
+			console.log(data);  
+		}else{  
+			lessc(data,output_file);    
+		}  
+	});
 }
 
 /*
@@ -82,11 +105,17 @@ function compileInput(){
  * a single file
  */
 if (watch_directory){
-    watch.watchTree(watch_directory, function(f, curr, prev){
+	compileInput();
+	console.log((new Date()).toTimeString() + " watch-lessc: Start Watch Tree: " + watch_directory);
+    watch.watchTree(watch_directory, function(f, current,previous){
+		if(current==previous) return;
         compileInput();
     });
 } else {
+	compileInput();
+	console.log((new Date()).toTimeString() + " watch-lessc: Start Watch File: " + output_file);
     fs.watchFile(input_file, function(current, previous) {
+		if(current==previous) return;
         compileInput();
     });
 }
