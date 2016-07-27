@@ -1,4 +1,4 @@
-# watch-lessc
+# watcher-lessc
 ===
 
 Watch `.less file` & `directory`  to compile to .css whenever file is saved.
@@ -17,7 +17,7 @@ But , You must specify `input` & `output` !
 
 1. Help documents
 
-		watch-lessc
+		watcher-lessc
 
 	Usage: {OPTIONS}
 
@@ -32,15 +32,15 @@ But , You must specify `input` & `output` !
 
 2. Specify input `.less` file & output `.css` file
 
-		watch-lessc -i less/index.less -o css/inde.css
+		watcher-lessc -i less/index.less -o css/inde.css
 		
 3. Specify input directory to watch.
 
-		watch-lessc -i less/index.less -o css/inde.css -d ./less
+		watcher-lessc -i less/index.less -o css/inde.css -d ./less
 		
 4. Specify less render options
 
-		watch-lessc -i less/index.less -o css/inde.css -d ./less -p ./less -f style.less -c
+		watcher-lessc -i less/index.less -o css/inde.css -d ./less -p ./less -f style.less -c
 		
 ## Contact
 

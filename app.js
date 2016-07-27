@@ -58,9 +58,9 @@ var lessc = function(lessInput, lessOutput){
 		if (!error) {
 			var fd = fs.openSync(lessOutput, "w");
 			fs.writeSync(fd, output.css, 0, "utf-8");
-			console.info((new Date()).toTimeString() + " watch-lessc: Write to file: " + output_file);
+			console.info((new Date()).toTimeString() + " watcher-lessc: Write to file: " + output_file);
 		} else {
-			console.error((new Date()).toTimeString() + " watch-lessc: Write error: " + error);
+			console.error((new Date()).toTimeString() + " watcher-lessc: Write error: " + error);
 		}
 	});
 }					
@@ -84,13 +84,13 @@ var input_file = path.resolve(process.cwd(), argv.input);
 var output_file = path.resolve(process.cwd(), argv.output);
 var watch_directory = argv.directory ? path.resolve(process.cwd(), argv.directory): '';
 
-console.log((new Date()).toTimeString() + " watch-lessc: InputFile: "+input_file);
-console.log((new Date()).toTimeString() + " watch-lessc: OutputFile: "+ output_file);
+console.log((new Date()).toTimeString() + " watcher-lessc: InputFile: "+input_file);
+console.log((new Date()).toTimeString() + " watcher-lessc: OutputFile: "+ output_file);
 /**
  * Compiles the less files given by the input and ouput options
  */
 var compileInput = function (){
-    console.log((new Date()).toTimeString() + " watch-lessc: Updated: " + output_file);
+    console.log((new Date()).toTimeString() + " watcher-lessc: Updated: " + output_file);
     fs.readFile(input_file, 'utf-8',function(err,data){
 		if(err){  
 			console.log(data);  
@@ -106,14 +106,14 @@ var compileInput = function (){
  */
 if (watch_directory){
 	compileInput();
-	console.log((new Date()).toTimeString() + " watch-lessc: Start Watch Tree: " + watch_directory);
+	console.log((new Date()).toTimeString() + " watcher-lessc: Start Watch Tree: " + watch_directory);
     watch.watchTree(watch_directory, function(f, current,previous){
 		if(current==previous) return;
         compileInput();
     });
 } else {
 	compileInput();
-	console.log((new Date()).toTimeString() + " watch-lessc: Start Watch File: " + output_file);
+	console.log((new Date()).toTimeString() + " watcher-lessc: Start Watch File: " + output_file);
     fs.watchFile(input_file, function(current, previous) {
 		if(current==previous) return;
         compileInput();
