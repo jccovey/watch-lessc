@@ -1,32 +1,36 @@
 {
-  "name": "watch-lessc",
+  "name": "watcher-lessc",
   "description": "Watches your specified .less file and auto-compiles it to the specified .css file.",
-  "readme": "watch-lessc processes a single .less stylesheet into a .css file using the LESS CSS compiler whenever changes to the .less file are made.\n\n    watch-lessc --help\n\n",
-  "version": "0.0.1",
+  "readme": "watcher-lessc processes a single .less stylesheet into a .css file using the LESS CSS compiler whenever changes to the .less file are made.\n\n    watch-lessc --help\n\n",
+  "version": "0.1.0",
   "keywords": [
     "css",
     "less",
     "lessc",
-    "watch"
+    "watch",
+	"watch-lessc"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/jccovey/watch-lessc"
+    "url": "https://github.com/liuhong1.happy/watcher-lessc"
   },
   "bin": {
-    "watch-lessc": "app.js"
+    "watcher-lessc": "app.js"
   },
   "dependencies": {
-    "less": ">=1.1.1 <2.0",
-    "optimist": ">=0.2.6 <0.3",
-    "watch": ">=0.5.1"
+    "less": ">=2.7.1",
+    "optimist": ">=0.6.1",
+    "watch": ">=0.19.1"
   },
   "engine": {
-    "node": ">=0.4.0"
+    "node": ">=4.0.0"
   },
-  "author": {
+  "author": [{
     "name": "John Covey",
     "email": "jccovey@gmail.com"
-  },
+  },{
+    "name": "Holly Liu",
+    "email": "liuhong1.happy@163.com"
+  }],
   "license": "BSD"
 }
