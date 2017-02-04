@@ -2,7 +2,7 @@
   "name": "watch-lessc",
   "description": "Watches your specified .less file and auto-compiles it to the specified .css file.",
   "readme": "watch-lessc processes a single .less stylesheet into a .css file using the LESS CSS compiler whenever changes to the .less file are made.\n\n    watch-lessc --help\n\n",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "keywords": [
     "css",
     "less",

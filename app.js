@@ -70,7 +70,7 @@ var output_file = path.resolve(process.cwd(), argv.output);
 var watch_directory = argv.directory ? path.resolve(process.cwd(), argv.directory): '';
 
 /**
- * Compiles the less files given by the input and ouput options
+ * Compiles the less files given by the input and output options
  */
 function compileInput(){
     console.log((new Date()).toTimeString() + " watch-lessc: Updated: " + output_file);
